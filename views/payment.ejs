@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ff bet payment</title>
+    <link rel="stylesheet" href="/css/payment.css">
+</head>
+<body>
+    <div class="main-container">
+        <h3>Payment Process</h3>
+        <input type="text" class="selectPaymentOption-error" id="selectPaymentOption-error" value="Select The Payment Method"  readonly>
+        <form action="/paymentsend" method="post" class="form-container" id="payment-Form">
+            <input type="hidden" name="MDmatchId" value="<%= MDmatchId %>">
+            <label for="">Player Name</label>
+            <input type="text" name="playerName" value="<%= player.FFNAME %>" readonly>
+            <label for="">Player Id</label>
+            <input type="text" name="playerId" value="<%= player.FFID %>" readonly>
+            <label for="">Match Type</label>
+            <input type="text" name="matchType" value="<%= matchType %>" readonly>
+            <label for="">Entry Amount</label>
+            <input type="text" name="entryAmount" value="<%= entryAmount %> Rupees" readonly>
+            <label for="">Match Starting Time</label>
+            <input type="text" name="matchStartingTime" value="<%= matchStartingTime %>" readonly>
+            <label for="">Patment Method</label>
+            <input type="text" name="paymentMethod" class="selectPaymentOption" id="selectPaymentOption" value="Select Payment Method" readonly required>
+           
+            <div class="payment-options" id="payment-options">
+                <p onclick="paymentOptionsfunction('GPAY')">GPAY</p>
+                <!-- <p onclick="paymentOptionsfunction('PHONEPE')" >PHONEPE</p> -->
+                <!-- <p onclick="paymentOptionsfunction('PAYTM')">PAYTM</p> -->
+            </div>
+       
+            <div class="upiid-paynumber-container" id="upiid-paynumber-container">
+                <input type="text" value="UPI ID: nobee5143-1@oksbi" readonly>
+                <input type="text" value="MOBILE NUMBER: 7603959664" readonly>
+            </div>
+            <label for="">Transaction  Id</label>
+            <input type="text" name="TransactionId" minlength="12" maxlength="12" inputmode="numeric" required>
+            <input type="submit" id="payment-Submit-Btn" value="Submit">
+        </form>
+    </div>
+
+    <script src="/js/payment.js"></script>
+</body>
+</html>

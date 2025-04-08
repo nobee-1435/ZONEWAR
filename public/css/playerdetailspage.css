@@ -1,0 +1,32 @@
+*{
+    margin: 0;padding: 0;font-family: sans-serif;
+}
+body{
+    background-color: rgb(255, 239, 245);
+}
+.main-container{
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    justify-content: start;
+    align-items: start;
+    margin-top: 10px;
+    font-size: 20px;
+    padding-left: 20px;
+
+}
+.main-container div{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    position: relative;
+}
+
+.main-container div p{
+    color: #a32929;
+}
+.main-container div label{
+    color: blue;
+}
+
+

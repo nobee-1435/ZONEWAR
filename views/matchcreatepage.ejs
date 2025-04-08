@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>my page</title>
+</head>
+<style>
+    .create-container{
+        display: flex;
+        justify-content: center;
+    }
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+    form input{
+        font-size: 20px;
+        width: 70vw;
+        padding: 5px;
+    }
+</style>
+<body>
+    <div class="create-container">
+        <form action="/creatematchsmyself" method="post">
+            <input type="text" name="matchType" required placeholder="MATCH TYPE">
+            <input type="text" name="entryAmount" required placeholder="MACTH ENTRY AMOUNT">
+            <input type="text" name="firstPrice"  required placeholder="MACTH FIRST PRICE">
+            <input type="text" name="secondPrice" required placeholder="MACTH 2ND PRICE">
+            <input type="text" name="thirdPrice" required placeholder="MACTH 3RD PRICE">
+            <input type="text" name="fourthandfifthPrice" required placeholder="MACTH 4 TO 5 PRICE">
+            <input type="text" name="sixthtoteenthPrice" required placeholder="MACTH 6 TO 10 PRICE">
+            <input type="text" name="totalParticipantPlayerNumber" required placeholder="MACTH TOTAL PARTICIPANT NUMBER 50">
+          
+            <input type="text" name="matchStartingTime" required placeholder="MACTH START TIME">
+            <input type="text" name="roomId" placeholder="ROOM ID">
+            <input type="text" name="roomPassword" placeholder="ROOM PASSWORD">
+
+            <input type="submit" value="creatematch">
+        </form>
+        
+
+    </div>
+</body>
+</html>

@@ -1,0 +1,20 @@
+*{
+    font-family: sans-serif;
+    text-decoration: none;
+}
+.head-TAC{
+    font-size: 20px;
+}
+.main-container p{
+    font-size: 15px;
+}
+.main-container .contact-TAC{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+@media (max-width: 600px) {
+    .head-TAC{
+        font-weight: 200;
+    }
+}

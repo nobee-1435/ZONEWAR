@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ff bet player select</title>
+    <link rel="stylesheet" href="/css/playerselectedpage.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="sub-main-container">    
+            <% appliedPlayerList.forEach(appliedPlayerList => { %>
+                <form class="form-container" id="form-container" action="/playerSelect" method="post">
+                    
+                    <input class="mdmatchid" type="text" name="MDmatchId" value="<%= appliedPlayerList.MDmatchId %>" readonly>
+                    <input class="mdmatchid" type="text" name="appliedplayerMDmatchid" value="<%= appliedPlayerList._id %>" readonly>
+                    <input type="text" name="playerName" value="<%= appliedPlayerList.playerName %>" readonly>
+                    <input type="text" name="playerId" value="<%= appliedPlayerList.playerId %>" readonly>
+                    <input type="text" name="matchType" value="<%= appliedPlayerList.matchType %>" readonly>
+                    <input type="text" name="matchStartingTime" value="<%= appliedPlayerList.matchStartingTime %>" readonly>
+                    <input type="text" name="paymentMethod" value="<%= appliedPlayerList.paymentMethod %>" readonly>
+                    <input type="text" name="entryAmount" value="<%= appliedPlayerList.entryAmount %>" readonly>
+                    <input type="text" name="TransactionId" value="<%= appliedPlayerList.TransactionId %>" readonly>
+                    <input id="selectbtn" type="submit" value="<%= appliedPlayerList.selectbtn %>">
+                    <input id="rejectbtn" type="submit" formaction="/playerReject" value="<%= appliedPlayerList.rejectbtn %>">
+                </form>
+            <% }) %>
+        </div>
+    </div>
+
+    <script src="/js/playerselectedpage.js">
+
+    </script>
+</body>
+</html>

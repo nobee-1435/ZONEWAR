@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>ff bet</title>
+    <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="ff-bet">
+            <p >FF BET</p>
+            <a href="/playerdetails"><%= player.FFNAME.charAt(0) %></a>
+        </div>
+     
+      <div class="sub-main-container">
+            <% if(matchAppliedorcanceled) { %>
+                <div class="homenotification">
+                    <div class="matchApplied-succes-notification-bar" id="matchApplied-succes-notification-bar">
+                        <p id="matchAppliedorcanceledValue"><%= matchAppliedorcanceled %></p>
+                   </div>
+                </div>
+            <% } %>   
+            
+            <p class="match-trmnt">MATCHS & TOURNMENTS</p>
+            <% mainMatchContainer.forEach(mainMatchContainer => { %>
+                <% mainMatchContainer.matchFullDetails.forEach(match => { %>
+                    <div class="match-details-container">
+                        <div class="firstprize-matchmodel">
+                            <div class="firstPrizeandPriceArrowContainer">
+                                <p class="first-prize">1st prize ₹<%= match.firstPrice %></p>
+                                <button class="arrowbtnContainer" onclick="toggleContainer(this)">
+                                    <span id="arrow" class="arrow">▼</span>Prize Details
+                                </button>
+                                <div class="prizeContainer" id="prizeContainer">
+                                    <ul>
+                                        <li>1st Place(Booyah): <%= match.firstPrice %> Rupees</li>
+                                        <li>2nd Place: <%= match.secondPrice %> Rupees</li>
+                                        <li>3rd Place: <%= match.thirdPrice %> Rupees</li>
+                                        <li>4-5th Place: <%= match.fourthandfifthPrice %> Rupees</li>
+                                        <li>6-10th Place: <%= match.sixthtoteenthPrice %> Rupees</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <input type="text" name="matchType" value="<%= match.matchType %>" readonly>
+                        </div>
+                        
+                        <% if (match.showRoomDetails) { %>
+                            <div class="roomid-password-container">
+                                <p>ROOM ID: <span class="roomid"><%= match.roomId %></span></p>
+                                <p>ROOM PASSWORD: <span class="roompassword"><%= match.roomPassword %></span></p>
+                            </div>
+                        <% } %>
+                        
+                        <div class="prize-entry">
+                            <p>Prize Pool</p>
+                            <p>Entry Amount</p> 
+                        </div>
+                        <div class="prizeamt-entryamt">
+                            <p style="color: rgb(5, 92, 5);">₹<%= match.firstPrice %></p>
+                            <form class="prize-form-container" id="paymentpage-submit-btn" action="/payment" method="post">
+                                <input type="hidden" name="matchType" value="<%= match.matchType %>" readonly>
+                                <input type="hidden" name="matchStartingTime" value="<%= match.matchStartingTime %>">
+                                <input type="hidden" name="MDmatchId" value="<%= match._id %>" readonly>
+                                <input type="submit" class="entryamount-btn" name="entryAmount" value="₹<%= match.entryAmount %>">
+                            </form>
+                        </div>
+            
+                        <div class="participants-counts">
+                            <div>
+                                <p>Total Participants</p>
+                            </div>
+                            <div>
+                                <span id="registered-payer"><%= match.appliedPlayerList.length %></span> /
+                                <span id="posible-player"><%= match.totalParticipantPlayerNumber %></span>
+                            </div>
+                        </div>
+            
+                        <div class="Player-details-container">
+                            <form class="Player-details-form-container" action="/playerdetails" method="post">
+                                                
+                        <% if (match.showRoomDetails) { %>
+                            <input type="submit" value="Players Details">
+                        <% } %>
+                                <input type="hidden" name="MDmatchId" value="<%= match._id %>" readonly>
+                                <p>Match Starting Time: <%= match.matchStartingTime %></p>
+                            </form>
+                        </div>
+            
+                        <div class="footer-container">
+                            <p>1st prize ₹<%= match.firstPrice %></p>
+                            <div class="guaranteed-container">
+                                <% if (match.showRoomDetails) { %>
+                                <p class="isTeam">You Are In Team</p>
+                                <% } else{%>
+                                <p class="isNotTeam">You Are Not In Team</p>
+
+                                    <%} %>
+                            </div>
+                        </div>
+                    </div>
+                <% }) %>
+            <% }) %>
+            
+
+
+
+        </div>
+    </div>
+
+ 
+
+
+
+    <script src="/js/home.js"></script>
+</body>
+</html>

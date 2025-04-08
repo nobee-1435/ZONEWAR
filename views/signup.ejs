@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0,  user-scalable=no">
+    <title>ff bet signup</title>
+    <link rel="stylesheet" href="/css/signuplogin.css">
+</head>
+<body>
+    <div class="img-container">
+
+        <div class="main-container">
+            
+            <form action="/signup" method="post" class="form-container">
+                <% if (mobileError) { %>
+                    <p id="mobile-error"><%= mobileError %></p>
+                <% } %>
+                <h2>SIGN UP</h2>
+                <input type="text" name="MobileNo" placeholder="Mobile No" minlength="10" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.slice(0,10)" required>
+                <input type="text" name="FFID" placeholder="Your FF Id" minlength="10" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.slice(0,10)" required>
+                <input type="text" name="FFNAME" placeholder="Your FF Name" required>
+                <input type="password" minlength="6" maxlength="20" placeholder="password" name="password" id="password" required>
+                <div class="ckeckbox-password-container">
+                    <input type="checkbox" id="togglepassword">Check Password
+                </div>
+                <div class="checkbox-agreement-container">
+                    <input type="checkbox" required> Agree terms and conditions
+                </div>
+                <a href="/login">I have a account go to login</a>
+   
+                <input type="submit" value="Signup">
+            </form>
+        </div>
+    </div>
+
+
+    <script src="/js/signuplogin.js"></script>
+
+</body>
+</html>
