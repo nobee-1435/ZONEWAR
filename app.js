@@ -400,6 +400,6 @@ function isLoggedIn(req, res, next) {
 //   console.log("server running well ✔");
 // });
 
-app.listen(process.env.PORT, () => {
+app.listen(process.env.PORT,'0.0.0.0', () => {
   console.log(`Server running well ✔ ${process.env.PORT}`);
 });
