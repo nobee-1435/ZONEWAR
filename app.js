@@ -384,17 +384,24 @@ app.post('/playerdetails', isLoggedIn, async function(req,res){
 
 
 
-
 function isLoggedIn(req, res, next) {
-  let token = req.cookies.token;
-  if (token === "") {
-    res.redirect("/login");
-  } else {
-    const data = jwt.verify(req.cookies.token, "freefirebet");
-    req.player = data;
+  const token = req.cookies?.token;
+
+  // Check if token is missing or empty
+  if (!token || token.trim() === "") {
+    return res.redirect("/login");
   }
-  next();
+
+  try {
+    const data = jwt.verify(token, "freefirebet");
+    req.player = data;
+    next(); // Call next only after successful verification
+  } catch (err) {
+    console.error("JWT error:", err.message);
+    return res.redirect("/login"); // Redirect if token is invalid
+  }
 }
+
 
 // app.listen(process.env.PORT || 3000, '0.0.0.0', function () {
 //   console.log("server running well ✔");
