@@ -3,7 +3,7 @@ const app = express();
 const path = require("path");
 const dotenv = require("dotenv");
 dotenv.config();
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const crypto = require("crypto");
