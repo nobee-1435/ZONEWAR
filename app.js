@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const crypto = require("crypto");
 const session = require('express-session');
+const MongoStore = require('connect-mongo');
 
 const playerModel = require("./models/player");
 const player = require("./models/player");
@@ -28,10 +29,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
 
+
+
 app.use(session({
   secret: 'freefirebet',
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: false,
+  store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI })
 }));
 
 let isAuthenticated = false;
