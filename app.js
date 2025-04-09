@@ -85,8 +85,7 @@ app.post('/playerselectedpage',isLoggedIn, async function(req,res){
   let {email,password} = req.body;
   if(email ===  process.env.EMAILID && password === process.env.PASSWORD){
   let appliedPlayerList = await appliedPlayerListModel.find();
-
-    res.render('playerselectedpage', {appliedPlayerList})
+    res.render('playerselectedpage', {appliedPlayerList});
   }else{
     res.redirect('/playerselectedpage');
   }
