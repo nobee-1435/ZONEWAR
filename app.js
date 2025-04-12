@@ -236,8 +236,8 @@ app.post("/signup", async function (req, res) {
       });
       let token = jwt.sign({ FFID: FFID, playerid: player._id }, "freefirebet");
       res.cookie("token", token, {
-        httpOnly: false,
-        secure: "freefirebet",
+        httpOnly: true,
+        secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
         sameSite: "strict",
       });
@@ -267,8 +267,8 @@ app.post("/login", async function (req, res) {
     if (result) {
       let token = jwt.sign({ FFID: FFID, playerId: player._id }, "freefirebet");
       res.cookie("token", token, {
-        httpOnly: false,
-        secure: "freefirebet",
+        httpOnly: true,
+        secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
         sameSite: "strict",
       });

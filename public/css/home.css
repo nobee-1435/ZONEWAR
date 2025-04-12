@@ -26,20 +26,21 @@
     position: sticky;
     top: 0px;
 }
-.main-container .ff-bet a{
+
+.profile-circle {
     text-decoration: none;
-    border: 1px solid rgb(202, 202, 221);
-    background-color: blue;
-    height: 30px;
-    width: 30px;
-    border-radius: 100%;
-    font-size: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%; /* makes it perfectly round */
+    background-color: #4a90e2; /* you can change this color */
     display: flex;
-    justify-content: center;
     align-items: center;
-    color: #fff;
-    font-weight: 400;
-    text-align: center;
+    justify-content: center;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    font-family: Arial, sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2); /* optional shadow */
 }
 .sub-main-container{
     /* height: fit-content;

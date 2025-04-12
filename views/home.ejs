@@ -10,7 +10,7 @@
     <div class="main-container">
         <div class="ff-bet">
             <p>ZONEWAR</p>
-            <a href="/playerdetails"><%= player.FFNAME.charAt(0) %></a>
+            <a href="/playerdetails" class="profile-circle">P</a>
         </div>
      
       <div class="sub-main-container">
@@ -39,6 +39,7 @@
                                         <li>3rd Place: <%= match.thirdPrice %> Rupees</li>
                                         <li>4-5th Place: <%= match.fourthandfifthPrice %> Rupees</li>
                                         <li>6-10th Place: <%= match.sixthtoteenthPrice %> Rupees</li>
+                                        <li style="font-size: 13px;">Winning amount will be reduced if player is not in the full.</li>
                                     </ul>
                                 </div>
                             </div>
@@ -83,7 +84,7 @@
                             <input type="submit" value="Players Details">
                         <% } %>
                                 <input type="hidden" name="MDmatchId" value="<%= match._id %>" readonly>
-                                <p>Match Starting Time: <%= match.matchStartingTime %></p>
+                                <p>Match Start Time: <%= match.matchStartingTime %></p>
                             </form>
                         </div>
             

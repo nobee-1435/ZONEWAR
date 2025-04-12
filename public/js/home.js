@@ -20,7 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
 let matchApplied_Succes_Notification_Bar = document.getElementById('matchApplied-succes-notification-bar');
 let matchAppliedorcanceledValue = document.getElementById('matchAppliedorcanceledValue');
-let notificationValue = matchAppliedorcanceledValue.textContent
+    let notificationValue = matchAppliedorcanceledValue.textContent;
+
+
 if(notificationValue.includes("Already")){
     matchApplied_Succes_Notification_Bar.style.backgroundColor = "red";
 }

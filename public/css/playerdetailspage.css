@@ -26,7 +26,11 @@ body{
     color: #a32929;
 }
 .main-container div label{
-    color: blue;
+    color: black;
+}
+a{
+    color: black;
+    text-decoration: none;
 }
 
 
