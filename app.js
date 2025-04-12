@@ -46,7 +46,15 @@ const authMiddleware = (req, res, next) => {
 
 //forpersonal
 app.get("/ffbetcreatematchmyself", isLoggedIn, async function (req, res) {
-  res.render("matchcreatepage");
+  res.render("password1");
+});
+app.post("/matchcreatepage", isLoggedIn, async function (req, res) {
+  let { email, password } = req.body;
+  if (email === process.env.EMAILID && password === process.env.PASSWORD) {
+    res.render("matchcreatepage",);
+  } else {
+    res.redirect("/ffbetcreatematchmyself");
+  }
 });
 
 app.post("/creatematchsmyself", isLoggedIn, async function (req, res) {
