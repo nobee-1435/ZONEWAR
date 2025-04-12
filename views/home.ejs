@@ -59,7 +59,7 @@
                         </div>
                         <div class="prizeamt-entryamt">
                             <p style="color: rgb(5, 92, 5);">₹<%= match.firstPrice %></p>
-                            <form class="prize-form-container" id="paymentpage-submit-btn" action="/payment" method="post">
+                            <form class="prize-form-container" id="paymentpage-submit-btn" action="/paymentBtn" method="post">
                                 <input type="hidden" name="matchType" value="<%= match.matchType %>" readonly>
                                 <input type="hidden" name="matchStartingTime" value="<%= match.matchStartingTime %>">
                                 <input type="hidden" name="MDmatchId" value="<%= match._id %>" readonly>

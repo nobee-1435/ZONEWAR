@@ -31,7 +31,7 @@ app.use(cookieParser());
 
 app.use(
   session({
-    secret: "freefirebet",
+    secret: process.env.JWT_SECRET,
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
@@ -51,7 +51,7 @@ app.get("/ffbetcreatematchmyself", isLoggedIn, async function (req, res) {
 app.post("/matchcreatepage", isLoggedIn, async function (req, res) {
   let { email, password } = req.body;
   if (email === process.env.EMAILID && password === process.env.PASSWORD) {
-    res.render("matchcreatepage",);
+    res.render("matchcreatepage");
   } else {
     res.redirect("/ffbetcreatematchmyself");
   }
@@ -190,10 +190,9 @@ app.post("/playerReject", async function (req, res) {
   return res.redirect("playerselectedpage");
 });
 
-app.get("/",  function (req, res) {
-
+app.get("/", function (req, res) {
   const token = req.cookies?.token;
-  
+
   res.render("logopage", { token });
 });
 
@@ -270,7 +269,7 @@ app.post("/signup", async function (req, res) {
         FFNAME,
         password: hash,
       });
-      let token = jwt.sign({ FFID: FFID, playerid: player._id }, "freefirebet");
+      let token = jwt.sign({ FFID: FFID, playerid: player._id }, process.env.JWT_SECRET);
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
@@ -298,7 +297,7 @@ app.post("/login", async function (req, res) {
   }
   bcrypt.compare(password, player.password, function (err, result) {
     if (result) {
-      let token = jwt.sign({ FFID: FFID, playerId: player._id }, "freefirebet");
+      let token = jwt.sign({ FFID: FFID, playerId: player._id }, process.env.JWT_SECRET);
       res.cookie("token", token, {
         httpOnly: true,
         secure: true,
@@ -328,41 +327,49 @@ app.get("/playerdetails", isLoggedIn, async function (req, res) {
   res.render("playerdetailspage", { player });
 });
 
-app.get(
-  "/payment/:matchType/:entryAmount/:playerId/:matchStartingTime/:MDmatchId/:hashedRoute",
-  isLoggedIn,
-  async function (req, res) {
-    let { matchType, entryAmount, playerId, matchStartingTime, MDmatchId } =
-      req.params;
-    const player = await playerModel.findOne({ FFID: req.player.FFID });
 
-    res.render("payment", {
-      matchType,
-      entryAmount,
-      matchStartingTime,
-      playerId,
-      player,
-      MDmatchId,
-    });
-  }
-);
-
-app.post("/payment", isLoggedIn, async function (req, res) {
+app.post("/paymentBtn", isLoggedIn, async function (req, res) {
   const player = await playerModel.findOne({ FFID: req.player.FFID });
-
   const playerId = player.FFID;
 
-  let { MDmatchId, entryAmount, matchType, matchStartingTime } = req.body;
+  const { matchType, MDmatchId, matchStartingTime, entryAmount } = req.body;
 
+  const encodedTime = encodeURIComponent(matchStartingTime);
   const hashedRoute = crypto
     .createHash("sha256")
-    .update(entryAmount)
+    .update(`${playerId}-${MDmatchId}-${matchType}-${process.env.SECRET_KEY}`)
     .digest("hex");
 
   res.redirect(
-    `payment/${matchType}/${entryAmount}/${playerId}/${matchStartingTime}/${MDmatchId}/${hashedRoute}`
+    `/payment/${playerId}/${matchType}/${MDmatchId}/${entryAmount}/${encodedTime}/${hashedRoute}`
   );
 });
+
+app.get('/payment/:playerId/:matchType/:MDmatchId/:entryAmount/:matchStartingTime/:hashedRoute', isLoggedIn, async function (req, res) {
+  const { playerId, matchType, MDmatchId, entryAmount, matchStartingTime, hashedRoute } = req.params;
+
+  const expectedHash = crypto
+    .createHash("sha256")
+    .update(`${playerId}-${MDmatchId}-${matchType}-${process.env.SECRET_KEY}`)
+    .digest("hex");
+
+  if (expectedHash !== hashedRoute) {
+    return res.status(403).send("Invalid payment route.");
+  }
+
+  const player = await playerModel.findOne({ FFID: req.player.FFID });
+
+  res.render('payment', {
+    matchType,
+    MDmatchId,
+    matchStartingTime: decodeURIComponent(matchStartingTime),
+    entryAmount,
+    player
+  });
+});
+
+
+
 
 app.post("/paymentsend", isLoggedIn, async function (req, res) {
   let {
@@ -453,7 +460,7 @@ function isLoggedIn(req, res, next) {
   }
 
   try {
-    const data = jwt.verify(token, "freefirebet");
+    const data = jwt.verify(token, process.env.JWT_SECRET);
     req.player = data;
     next(); // Call next only after successful verification
   } catch (err) {
