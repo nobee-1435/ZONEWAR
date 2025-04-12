@@ -183,7 +183,8 @@ app.post("/playerReject", async function (req, res) {
 });
 
 app.get("/", function (req, res) {
-  let token = req.cookies.token;
+  const token = req.cookies?.token;
+  
   res.render("logopage", { token });
 });
 
