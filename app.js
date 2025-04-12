@@ -182,7 +182,8 @@ app.post("/playerReject", async function (req, res) {
   return res.redirect("playerselectedpage");
 });
 
-app.get("/", function (req, res) {
+app.get("/",  function (req, res) {
+
   const token = req.cookies?.token;
   
   res.render("logopage", { token });

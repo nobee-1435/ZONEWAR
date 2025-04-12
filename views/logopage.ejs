@@ -34,11 +34,11 @@
 
     <script>
         setTimeout(() => {
-            let token = "<%= token %>"
+            const token = "<%= token %>"
             console.log(token);
             
             if(token === ""){
-                window.location.href = '/login'
+                window.location.href = '/signup'
             }
             else{
                 window.location.href = '/home'
