@@ -208,23 +208,29 @@ app.get("/home", isLoggedIn, async function (req, res) {
   req.session.matchAppliedorcanceled = null;
 
   const player = await playerModel.findOne({ FFID: req.player.FFID });
-  let playerFFID = player.FFID;
+  if(! player){
+    res.redirect('/signup');
+  }
+  else{
+    let playerFFID = player.FFID;
 
-  const filteredMatches = mainMatchContainer.map((container) => {
-    container.matchFullDetails = container.matchFullDetails.map((match) => {
-      match.showRoomDetails = match.selectedPlayerList.some(
-        (player) => player.playerId === String(playerFFID)
-      );
-      return match;
+    const filteredMatches = mainMatchContainer.map((container) => {
+      container.matchFullDetails = container.matchFullDetails.map((match) => {
+        match.showRoomDetails = match.selectedPlayerList.some(
+          (player) => player.playerId === String(playerFFID)
+        );
+        return match;
+      });
+      return container;
     });
-    return container;
-  });
+  
+    res.render("home", {
+      mainMatchContainer: filteredMatches,
+      player,
+      matchAppliedorcanceled: matchAppliedorcanceled,
+    });
+  }
 
-  res.render("home", {
-    mainMatchContainer: filteredMatches,
-    player,
-    matchAppliedorcanceled: matchAppliedorcanceled,
-  });
 });
 
 app.get("/termsandconditions", function (req, res) {
@@ -267,7 +273,15 @@ app.post("/signup", async function (req, res) {
         MobileNo,
         FFID,
         FFNAME,
-        password: hash,
+        password,
+        solomatchwiningcounts: 0,
+        duomatchwiningcounts: 0,
+        squadmatchwiningcounts: 0,
+        solomatchwiningdiamonds: 0,
+        duomatchwiningdiamonds: 0,
+        squadmatchwiningdiamonds: 0,
+        totaldiamonds: 0,
+
       });
       let token = jwt.sign({ FFID: FFID, playerid: player._id }, process.env.JWT_SECRET);
       res.cookie("token", token, {
@@ -334,6 +348,9 @@ app.post("/paymentBtn", isLoggedIn, async function (req, res) {
 
   const { matchType, MDmatchId, matchStartingTime, entryAmount } = req.body;
 
+  
+  
+  
   const encodedTime = encodeURIComponent(matchStartingTime);
   const hashedRoute = crypto
     .createHash("sha256")
@@ -346,7 +363,13 @@ app.post("/paymentBtn", isLoggedIn, async function (req, res) {
 });
 
 app.get('/payment/:playerId/:matchType/:MDmatchId/:entryAmount/:matchStartingTime/:hashedRoute', isLoggedIn, async function (req, res) {
+
+
   const { playerId, matchType, MDmatchId, entryAmount, matchStartingTime, hashedRoute } = req.params;
+
+
+  const matchFullDetails = await matchFullDetailsModel.findById({ _id: MDmatchId });
+
 
   const expectedHash = crypto
     .createHash("sha256")
@@ -364,7 +387,9 @@ app.get('/payment/:playerId/:matchType/:MDmatchId/:entryAmount/:matchStartingTim
     MDmatchId,
     matchStartingTime: decodeURIComponent(matchStartingTime),
     entryAmount,
-    player
+    player,
+    matchFullDetails
+
   });
 });
 
@@ -386,6 +411,36 @@ app.post("/paymentsend", isLoggedIn, async function (req, res) {
   const matchFullDetails = await matchFullDetailsModel
     .findOne({ _id: MDmatchId })
     .populate("appliedPlayerList");
+
+    if (matchFullDetails) {
+      const playerIds = matchFullDetails.appliedPlayerList.map(
+        (player) => player.playerId
+      );
+      if (playerIds.includes(playerId)) {
+        req.session.matchAppliedorcanceled = `${playerId} This PlayerId Was Already Applied This Match`;
+        return res.redirect("home");
+      } else {
+        let appliedPlayerList = await appliedPlayerListModel.create({
+          MDmatchId,
+          playerName,
+          playerId,
+          matchType,
+          matchStartingTime,
+          entryAmount,
+          paymentMethod,
+          TransactionId,
+          selectbtn: "Select",
+          rejectbtn: "Reject",
+        });
+        await appliedPlayerList.save();
+        matchFullDetails.appliedPlayerList.push(appliedPlayerList._id);
+        await matchFullDetails.save();
+        req.session.matchAppliedorcanceled =
+          "Applied Sucessfully.. Wait for few Minutes.. you will be add that match";
+        return res.redirect("home");
+      }
+    }
+
   const fullTransactionId = await appliedPlayerListModel.findOne({
     TransactionId,
   });
@@ -395,34 +450,7 @@ app.post("/paymentsend", isLoggedIn, async function (req, res) {
     return res.redirect("home");
   }
 
-  if (matchFullDetails) {
-    const playerIds = matchFullDetails.appliedPlayerList.map(
-      (player) => player.playerId
-    );
-    if (playerIds.includes(playerId)) {
-      req.session.matchAppliedorcanceled = `${playerId} This PlayerId Was Already Applied This Match`;
-      return res.redirect("home");
-    } else {
-      let appliedPlayerList = await appliedPlayerListModel.create({
-        MDmatchId,
-        playerName,
-        playerId,
-        matchType,
-        matchStartingTime,
-        entryAmount,
-        paymentMethod,
-        TransactionId,
-        selectbtn: "Select",
-        rejectbtn: "Reject",
-      });
-      await appliedPlayerList.save();
-      matchFullDetails.appliedPlayerList.push(appliedPlayerList._id);
-      await matchFullDetails.save();
-      req.session.matchAppliedorcanceled =
-        "Applied Sucessfully.. Wait for few Minutes.. you will be add that match";
-      return res.redirect("home");
-    }
-  }
+
 });
 
 app.get(
@@ -451,7 +479,19 @@ app.post("/playerdetails", isLoggedIn, async function (req, res) {
   res.redirect(`/playerDetails/${MDmatchId}/${hashedRoute}`);
 });
 
+app.get('/diamond', isLoggedIn , async function (req,res) {
+
+  let player = await playerModel.findOne({ FFID: req.player.FFID });
+  if(! player){
+    res.redirect('/signup')
+  }else{
+    res.render('diamond', {player})
+  }
+
+})
+
 function isLoggedIn(req, res, next) {
+
   const token = req.cookies?.token;
 
   // Check if token is missing or empty

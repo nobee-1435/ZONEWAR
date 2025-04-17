@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZONEWAR Diamond</title>
+    <link rel="stylesheet" href="/css/diamond.css">
+</head>
+<body>
+    <div class="main-container">
+        <h3 class="redeem-line">Redeem</h3>
+        <div class="player-Details-Container">
+            <div class="player-Details">
+                <p>ID: <%= player.FFID %></p>
+                <p>Name: <%= player.FFNAME %></p>
+                <p>Mobile: <%= player.MobileNo %></p>
+            </div>
+        </div>
+        <div class="sub-main-container">
+            <h5>Winnig Details</h5>
+            <p>Solo Match: <%= player.solomatchwiningcounts %> matchs</p>
+            <p>Duo Match: <%= player.duomatchwiningcounts %> matchs</p>
+            <p>Squad Match: <%= player.squadmatchwiningcounts %> matchs</p>
+            <hr>
+            <h5>Diamond Details</h5>
+            <p>Solo Match: <%= player.solomatchwiningdiamonds %> Diamonds💎</p>
+            <p>Duo Match: <%= player.duomatchwiningdiamonds %> Diamonds💎</p>
+            <p>Squad Match: <%= player.squadmatchwiningdiamonds %> Diamonds💎</p>
+            <hr>
+            <h5>Total Diamond</h5>
+            <p>Total Diamond: <%= player.totaldiamonds %> Diamonds💎</p>
+        </div>
+        <div class="redeem-box-container">
+            <p class="heading">Redeem Box</p>
+            <p class="error-msg">Minimum Redeem Diamond 100</p>
+                <form action="" method="post">
+                    <div class="redeem-box">
+                        <input type="text" value="<%= player.FFID %>" readonly>
+                        <input name="diamondValue" type="text" placeholder="Enter Diamonds Value(100,150,200)" inputmode="numeric">
+                        <input type="submit" value="Redeem">
+                    </div>
+                </form>
+        </div>
+
+    </div>
+
+    <script src="/public/js/diamond.js">
+
+    </script>
+</body>
+</html>

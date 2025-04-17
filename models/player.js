@@ -10,7 +10,13 @@ const playerSchema = mongoose.Schema({
     FFID: Number,
     FFNAME: String,
     password: String,
-
+    solomatchwiningcounts: Number,
+    duomatchwiningcounts: Number,
+    squadmatchwiningcounts: Number,
+    solomatchwiningdiamonds: Number,
+    duomatchwiningdiamonds: Number,
+    squadmatchwiningdiamonds: Number,
+    totaldiamonds: Number,
     date: {
         type: Date,
         default: Date.now

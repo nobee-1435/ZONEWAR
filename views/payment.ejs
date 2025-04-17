@@ -19,16 +19,19 @@
             <label for="">Match Type</label>
             <input type="text" name="matchType" value="<%= matchType %>" readonly>
             <label for="">Entry Amount</label>
-            <input type="text" name="entryAmount" value="<%= entryAmount %> Rupees" readonly>
+            <input type="text" name="entryAmount" value="<%= entryAmount %>" readonly>
             <label for="">Match Starting Time</label>
             <input type="text" name="matchStartingTime" value="<%= matchStartingTime %>" readonly>
+
+
+            <% if (matchFullDetails.entryAmount !== "FREE") { %>
             <label for="">Patment Method</label>
             <input type="text" name="paymentMethod" class="selectPaymentOption" id="selectPaymentOption" value="Select Payment Method" readonly required>
            
             <div class="payment-options" id="payment-options">
                 <p onclick="paymentOptionsfunction('GPAY')">GPAY</p>
-                <!-- <p onclick="paymentOptionsfunction('PHONEPE')" >PHONEPE</p> -->
-                <!-- <p onclick="paymentOptionsfunction('PAYTM')">PAYTM</p> -->
+                <p onclick="paymentOptionsfunction('PHONEPE')" >PHONEPE</p>
+                <p onclick="paymentOptionsfunction('PAYTM')">PAYTM</p>
             </div>
        
             <div class="upiid-paynumber-container" id="upiid-paynumber-container">
@@ -37,6 +40,10 @@
             </div>
             <label for="">Transaction  Id</label>
             <input type="text" name="TransactionId" maxlength="12" minlength="12" inputmode="numeric" required>
+
+            <% } %>
+
+
             <input type="submit" id="payment-Submit-Btn" value="Submit">
         </form>
     </div>
