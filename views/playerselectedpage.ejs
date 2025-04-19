@@ -11,7 +11,6 @@
         <div class="sub-main-container">    
             <% appliedPlayerList.forEach(appliedPlayerList => { %>
                 <form class="form-container" id="form-container" action="/playerSelect" method="post">
-                    
                     <input class="mdmatchid" type="text" name="MDmatchId" value="<%= appliedPlayerList.MDmatchId %>" readonly>
                     <input class="mdmatchid" type="text" name="appliedplayerMDmatchid" value="<%= appliedPlayerList._id %>" readonly>
                     <input type="text" name="playerName" value="<%= appliedPlayerList.playerName %>" readonly>
@@ -19,7 +18,7 @@
                     <input type="text" name="matchType" value="<%= appliedPlayerList.matchType %>" readonly>
                     <input type="text" name="matchStartingTime" value="<%= appliedPlayerList.matchStartingTime %>" readonly>
                     <input type="text" name="paymentMethod" value="<%= appliedPlayerList.paymentMethod %>" readonly>
-                    <input type="text" name="entryAmount" value="<%= appliedPlayerList.entryAmount %>" readonly>
+                    <input class="entryAmount" type="text" name="entryAmount" value="<%= appliedPlayerList.entryAmount %>" readonly>
                     <input type="text" name="TransactionId" value="<%= appliedPlayerList.TransactionId %>" readonly>
                     <input id="selectbtn" type="submit" value="<%= appliedPlayerList.selectbtn %>">
                     <input id="rejectbtn" type="submit" formaction="/playerReject" value="<%= appliedPlayerList.rejectbtn %>">

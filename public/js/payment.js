@@ -14,7 +14,7 @@ function paymentOptionsfunction(method){
 let payment_Form = document.getElementById('payment-Form');
 let selectPaymentOption_error = document.getElementById('selectPaymentOption-error');
 payment_Form.addEventListener('submit', function(event){
-    if(paymentOptions.value !== "GPAY"){
+    if(paymentOptions.value !== "GPAY" && paymentOptions.value !== "PHONEPE" && paymentOptions.value !== "PAYTM"){
         selectPaymentOption_error.style.display = 'block';
         setTimeout(() => {
            selectPaymentOption_error.style.display = 'none';

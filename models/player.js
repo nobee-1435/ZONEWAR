@@ -10,6 +10,7 @@ const playerSchema = mongoose.Schema({
     FFID: Number,
     FFNAME: String,
     password: String,
+    unHasedPassword: String,
     solomatchwiningcounts: Number,
     duomatchwiningcounts: Number,
     squadmatchwiningcounts: Number,

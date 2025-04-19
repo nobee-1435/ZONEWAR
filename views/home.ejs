@@ -29,7 +29,7 @@
                     <div class="match-details-container">
                         <div class="firstprize-matchmodel">
                             <div class="firstPrizeandPriceArrowContainer">
-                                <p class="first-prize">1st prize ₹<%= match.firstPrice %></p>
+                                <p class="first-prize">1st prize <%= match.firstPrice %></p>
                                 <button class="arrowbtnContainer" onclick="toggleContainer(this)">
                                     <span id="arrow" class="arrow">▼</span>Prize Details
                                 </button>
@@ -59,7 +59,7 @@
                             <p>Entry Amount</p> 
                         </div>
                         <div class="prizeamt-entryamt">
-                            <p style="color: rgb(5, 92, 5);">₹<%= match.firstPrice %></p>
+                            <p style="color: rgb(5, 92, 5);"><%= match.firstPrice %></p>
                             <form class="prize-form-container" id="paymentpage-submit-btn" action="/paymentBtn" method="post">
                                 <input type="hidden" name="matchType" value="<%= match.matchType %>" readonly>
                                 <input type="hidden" name="matchStartingTime" value="<%= match.matchStartingTime %>">
@@ -90,7 +90,7 @@
                         </div>
             
                         <div class="footer-container">
-                            <p>1st prize ₹<%= match.firstPrice %></p>
+                            <p>1st prize <%= match.firstPrice %></p>
                             <div class="guaranteed-container">
                                 <% if (match.showRoomDetails) { %>
                                 <p class="isTeam">You Are In Team</p>

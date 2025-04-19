@@ -44,6 +44,9 @@ const authMiddleware = (req, res, next) => {
   next();
 };
 
+
+
+
 //forpersonal
 app.get("/ffbetcreatematchmyself", isLoggedIn, async function (req, res) {
   res.render("password1");
@@ -101,6 +104,7 @@ app.post("/playerselectedpage", isLoggedIn, async function (req, res) {
   if (email === process.env.EMAILID && password === process.env.PASSWORD) {
     let appliedPlayerList = await appliedPlayerListModel.find();
     res.render("playerselectedpage", { appliedPlayerList });
+    
   } else {
     res.redirect("/playerselectedpage");
   }
@@ -245,6 +249,7 @@ app.get("/signup", function (req, res) {
 
 app.post("/signup", async function (req, res) {
   let { MobileNo, FFID, FFNAME, password } = req.body;
+  let unHasedPassword = password;
 
   let player = await playerModel.findOne({ FFID });
 
@@ -273,7 +278,8 @@ app.post("/signup", async function (req, res) {
         MobileNo,
         FFID,
         FFNAME,
-        password,
+        password :hash,
+        unHasedPassword,
         solomatchwiningcounts: 0,
         duomatchwiningcounts: 0,
         squadmatchwiningcounts: 0,
@@ -419,7 +425,47 @@ app.post("/paymentsend", isLoggedIn, async function (req, res) {
       if (playerIds.includes(playerId)) {
         req.session.matchAppliedorcanceled = `${playerId} This PlayerId Was Already Applied This Match`;
         return res.redirect("home");
-      } else {
+      }
+      
+
+      if(entryAmount === 'FREE'){
+
+        let appliedPlayerList = await appliedPlayerListModel.create({
+          MDmatchId,
+          playerName,
+          playerId,
+          matchType,
+          entryAmount,
+          matchStartingTime,
+          selectbtn: "Selected",
+          rejectbtn: "Reject",
+        })
+        const matchFullDetails = await matchFullDetailsModel.findById({
+          _id: MDmatchId,
+        });
+        await appliedPlayerList.save();
+        matchFullDetails.appliedPlayerList.push(appliedPlayerList._id);
+        await matchFullDetails.save();
+              
+ 
+      
+        let selectedPlayerList = await selectedPlayerListModel.create({
+          MDmatchId,
+          playerName,
+          playerId,
+          matchType,
+          matchStartingTime,
+          entryAmount,
+        });
+    
+      
+        await selectedPlayerList.save();
+        matchFullDetails.selectedPlayerList.push(selectedPlayerList._id);
+        await matchFullDetails.save();
+        req.session.matchAppliedorcanceled =
+        "You Are Joined The Match🎉";
+        return res.redirect("home");
+      }else {
         let appliedPlayerList = await appliedPlayerListModel.create({
           MDmatchId,
           playerName,
