@@ -16,6 +16,9 @@
                 <p>Mobile: <%= player.MobileNo %></p>
             </div>
         </div>
+        <div class="diamond-topup-error-msg">
+            
+        </div>
         <div class="sub-main-container">
             <h5>Winnig Details</h5>
             <p>Solo Match: <%= player.solomatchwiningcounts %> matchs</p>
@@ -32,12 +35,12 @@
         </div>
         <div class="redeem-box-container">
             <p class="heading">Redeem Box</p>
-            <p class="error-msg">Minimum Redeem Diamond 100</p>
-                <form action="" method="post">
+            <p id="error-msg">Minimum Redeem Diamond 100</p>
+                <form action="/redeem" method="post">
                     <div class="redeem-box">
                         <input type="text" value="<%= player.FFID %>" readonly>
-                        <input name="diamondValue" type="text" placeholder="Enter Diamonds Value(100,150,200)" inputmode="numeric">
-                        <input type="submit" value="Redeem">
+                        <input name="redeemdiamondValue" id="redeemdiamondValue" type="text" maxlength="4" placeholder="Enter Diamonds Value(100,150,200)" inputmode="numeric" required>
+                        <input id="Redeembtn" type="submit" value="Redeem">
                     </div>
                 </form>
         </div>

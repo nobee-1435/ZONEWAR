@@ -23,7 +23,10 @@ let matchAppliedorcanceledValue = document.getElementById('matchAppliedorcancele
     let notificationValue = matchAppliedorcanceledValue.textContent;
 
 
-if(notificationValue.includes("Already")){
+if(notificationValue.includes("Already") && notificationValue.includes("don't")){
+    matchApplied_Succes_Notification_Bar.style.backgroundColor = "red";
+}
+if(notificationValue.includes("don't")){
     matchApplied_Succes_Notification_Bar.style.backgroundColor = "red";
 }
 if(matchApplied_Succes_Notification_Bar.style.display = 'block'){

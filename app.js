@@ -17,6 +17,7 @@ const matchFullDetailsModel = require("./models/matchFullDetails");
 const appliedPlayerListModel = require("./models/appliedPlayerList");
 const selectedPlayerListModel = require("./models/selectedPlayerList");
 const rejectedPlayerListModel = require("./models/rejectedPlayerList");
+const topupDataModel = require('./models/TopupData');
 const { log } = require("console");
 const matchFullDetails = require("./models/matchFullDetails");
 const mainMatchContainer = require("./models/mainMatchContainer");
@@ -426,9 +427,7 @@ app.post("/paymentsend", isLoggedIn, async function (req, res) {
         req.session.matchAppliedorcanceled = `${playerId} This PlayerId Was Already Applied This Match`;
         return res.redirect("home");
       }
-      
-
-      if(entryAmount === 'FREE'){
+      if(entryAmount === '₹FREE'){
 
         let appliedPlayerList = await appliedPlayerListModel.create({
           MDmatchId,
@@ -534,6 +533,36 @@ app.get('/diamond', isLoggedIn , async function (req,res) {
     res.render('diamond', {player})
   }
 
+})
+
+app.post('/redeem', isLoggedIn , async function(req,res){
+  let player = await playerModel.findOne({ FFID: req.player.FFID });
+  const playerFFID = player.FFID;
+  let {redeemdiamondValue} = req.body;
+  if(player.totaldiamonds < redeemdiamondValue){
+    req.session.matchAppliedorcanceled =
+    "You don't have enough diamonds.";
+    res.redirect('/home');
+  }else{
+     await topupDataModel.create({
+      playerFFID,
+      redeemdiamondValue,
+      TopupOrNot: "NO",
+    })
+    let newDiamondValue = player.totaldiamonds-redeemdiamondValue;
+    console.log(newDiamondValue);
+    
+    await playerModel.findOneAndUpdate(
+      { FFID: req.player.FFID },
+      { totaldiamonds: newDiamondValue },
+      { new: true }
+  );
+
+    req.session.matchAppliedorcanceled =
+    `Redeem successful.Within 24 hours, ${redeemdiamondValue} diamonds will be topped up to your Free Fire ID ${playerFFID}.`;
+    res.redirect('/home');
+  }
+  
 })
 
 function isLoggedIn(req, res, next) {

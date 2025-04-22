@@ -49,7 +49,7 @@
     color: blue;
     margin-top: 10px;
 }
-.redeem-box-container .error-msg{
+.redeem-box-container #error-msg{
     color: #fff;
     margin: 5px;
     height: fit-content;
