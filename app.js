@@ -10,6 +10,10 @@ const crypto = require("crypto");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
+const { SitemapStream, streamToPromise } = require('sitemap');
+const { Readable } = require('stream');
+
+
 const playerModel = require("./models/player");
 const player = require("./models/player");
 const mainMatchContainerModel = require("./models/mainMatchContainer");
@@ -44,6 +48,30 @@ const authMiddleware = (req, res, next) => {
   res.set("Cache-Control", "no-store");
   next();
 };
+
+app.get('/sitemap.xml', async (req, res) => {
+  try {
+    const links = [
+      { url: '/', changefreq: 'daily', priority: 1.0 },
+      { url: '/home', changefreq: 'weekly', priority: 0.8 },
+      { url: '/profile', changefreq: 'monthly', priority: 0.6 },
+      // Add more routes here as needed
+    ];
+
+    const stream = new SitemapStream({ hostname: 'https://zonewar.in' });
+
+    res.writeHead(200, {
+      'Content-Type': 'application/xml',
+    });
+
+    const xmlString = await streamToPromise(Readable.from(links).pipe(stream));
+    res.end(xmlString.toString());
+  } catch (err) {
+    console.error('Sitemap generation error:', err);
+    res.status(500).end();
+  }
+});
+
 
 
 

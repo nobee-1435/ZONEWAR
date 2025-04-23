@@ -20,6 +20,7 @@
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.10.1",
-    "pm2": "^6.0.5"
+    "pm2": "^6.0.5",
+    "sitemap": "^8.0.0"
   }
 }
