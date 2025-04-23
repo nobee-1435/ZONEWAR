@@ -46,15 +46,14 @@
 
     <script>
         setTimeout(() => {
-            const token = "<%= token %>"
-            
-            if(token === ""){
-                window.location.href = '/signup'
+            const token = "<%= token %>".trim();
+
+            if (!token) {
+                window.location.href = '/signup';
+            } else {
+                window.location.href = '/home';
             }
-            else{
-                window.location.href = '/home'
-            };
-        }, 3000)
+        }, 3000);
     </script>
 </body>
 </html>

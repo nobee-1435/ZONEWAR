@@ -550,7 +550,6 @@ app.post('/redeem', isLoggedIn , async function(req,res){
       TopupOrNot: "NO",
     })
     let newDiamondValue = player.totaldiamonds-redeemdiamondValue;
-    console.log(newDiamondValue);
     
     await playerModel.findOneAndUpdate(
       { FFID: req.player.FFID },
