@@ -29,10 +29,18 @@ const selectedPlayerList = require("./models/selectedPlayerList");
 const appliedPlayerList = require("./models/appliedPlayerList");
 
 app.set("view engine", "ejs");
+app.set('trust proxy', true);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(cookieParser());
+
+app.use((req, res, next) => {
+  if (req.protocol !== 'https') {
+    return res.redirect('https://' + req.headers.host + req.url);
+  }
+  next();
+});
 
 app.use(
   session({
@@ -225,9 +233,9 @@ app.post("/playerReject", async function (req, res) {
 
 app.get("/", function (req, res) {
   const token = req.cookies?.token;
-
   res.render("logopage", { token });
 });
+
 
 app.get("/home", isLoggedIn, async function (req, res) {
   let mainMatchContainer = await mainMatchContainerModel.find().populate({

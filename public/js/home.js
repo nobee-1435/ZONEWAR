@@ -31,6 +31,7 @@ if(notificationValue.includes("don't")){
 }
 if(matchApplied_Succes_Notification_Bar.style.display = 'block'){
     setTimeout(() => {
+        window.location.reload();
         matchApplied_Succes_Notification_Bar.style.display = 'none';
     }, 10000);
 }
