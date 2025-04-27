@@ -205,8 +205,7 @@ app.post("/playerReject", async function (req, res) {
 });
 
 app.get("/", function (req, res) {
-  let token = req.cookies.token;
-  res.render("logopage", { token });
+  res.redirect("/home");
 });
 
 
