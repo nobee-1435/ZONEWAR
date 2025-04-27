@@ -51,28 +51,7 @@ const authMiddleware = (req, res, next) => {
   next();
 };
 
-app.get('/sitemap.xml', async (req, res) => {
-  try {
-    const links = [
-      { url: '/', changefreq: 'daily', priority: 1.0 },
-      { url: '/home', changefreq: 'weekly', priority: 0.8 },
-      { url: '/profile', changefreq: 'monthly', priority: 0.6 },
-      // Add more routes here as needed
-    ];
 
-    const stream = new SitemapStream({ hostname: 'https://zonewar.in' });
-
-    res.writeHead(200, {
-      'Content-Type': 'application/xml',
-    });
-
-    const xmlString = await streamToPromise(Readable.from(links).pipe(stream));
-    res.end(xmlString.toString());
-  } catch (err) {
-    console.error('Sitemap generation error:', err);
-    res.status(500).end();
-  }
-});
 
 
 
@@ -226,9 +205,10 @@ app.post("/playerReject", async function (req, res) {
 });
 
 app.get("/", function (req, res) {
-  const token = req.cookies?.token;
+  let token = req.cookies.token;
   res.render("logopage", { token });
 });
+
 
 
 app.get("/home", isLoggedIn, async function (req, res) {

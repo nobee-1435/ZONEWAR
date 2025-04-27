@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/imgs/zonewarlogo.jpeg" type="image/x-icon">
     <title>ZoneWar - Best Free Fire Free Diamond Platform</title>
     <style>
         body{
@@ -45,14 +46,16 @@
 
 
     <script>
-    setTimeout(() => {
-      const tokenExists = "<%= token ? 'true' : 'false' %>";
-      if (tokenExists === 'true') {
-        window.location.href = "/home";
-      } else {
-        window.location.href = "/signup";
-      }
-    }, 3000);
+        setTimeout(() => {
+            let token = "<%= token %>"
+            
+            if(token === ""){
+                window.location.href = "/login"                
+            }
+            else{
+                window.location.href = "/home"
+            }
+        }, 5000);
     </script>
 </body>
 </html>
