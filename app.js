@@ -578,7 +578,7 @@ function isLoggedIn(req, res, next) {
   const token = req.cookies?.token;
 
   // Check if token is missing or empty
-  if (!token || token.trim() === "") {
+  if (!token || token.length === 0) {
     return res.redirect("/login");
   }
 
