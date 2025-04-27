@@ -304,7 +304,7 @@ app.post("/signup", async function (req, res) {
         httpOnly: true,
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
-        sameSite: "strict",
+        sameSite: "none",
       });
       res.redirect("/home");
     });
@@ -332,7 +332,7 @@ app.post("/login", async function (req, res) {
         httpOnly: true,
         secure: true,
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
-        sameSite: "strict",
+        sameSite: "none",
       });
       isAuthenticated = true;
       res.redirect("home");
