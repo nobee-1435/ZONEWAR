@@ -237,10 +237,11 @@ app.get("/home", isLoggedIn, async function (req, res) {
       });
       return container;
     });
+    const player1stLetter = player.FFNAME.charAt(0);
   
     res.render("home", {
       mainMatchContainer: filteredMatches,
-      player,
+      player,player1stLetter,
       matchAppliedorcanceled: matchAppliedorcanceled,
     });
   }
