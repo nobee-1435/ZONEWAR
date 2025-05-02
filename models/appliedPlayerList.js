@@ -16,6 +16,12 @@ const appliedPlayerListSchema = mongoose.Schema({
     TransactionId: Number,
     selectbtn: String,
     rejectbtn: String,
+    player2Id : String,
+    player2Name: String,
+    player3Id : String,
+    player3Name: String,
+    player4Id : String,
+    player4Name: String,
     date: {
         type: Date,
         default: Date.now

@@ -29,9 +29,14 @@ if(notificationValue.includes("Already")){
 if(notificationValue.includes("don't")){
     matchApplied_Succes_Notification_Bar.style.backgroundColor = "red";
 }
+if(notificationValue.includes("already joined in the squad")){
+    matchApplied_Succes_Notification_Bar.style.backgroundColor = "red";
+}
+if(notificationValue.includes("does not have an account on Zonewar")){
+    matchApplied_Succes_Notification_Bar.style.backgroundColor = "red";
+}
 if(matchApplied_Succes_Notification_Bar.style.display = 'block'){
     setTimeout(() => {
-        window.location.reload();
         matchApplied_Succes_Notification_Bar.style.display = 'none';
     }, 10000);
 }

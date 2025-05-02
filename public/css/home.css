@@ -156,6 +156,13 @@
     padding: 10px;
     font-size: 12px; 
 }
+.footer-container .footer-1st-prize{
+   min-width: 20vw;
+}
+.head-1st-prize{
+    color: rgb(34, 146, 34);
+    min-width: 10vw;
+ }
 .footer-container .guaranteed-container{
     display: flex;
     flex-direction: row;
@@ -272,9 +279,9 @@
 @keyframes homenotification {
     0%{
         position: relative;
-        top: 0px;
+        top: 10px;
     }
     100%{
-        top: 20px;
+        top: 25px;
     }
 }

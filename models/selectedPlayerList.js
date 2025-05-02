@@ -14,6 +14,12 @@ const selectedPlayerListSchema = mongoose.Schema({
     paymentMethod: String,
     matchStartingTime: String,
     TransactionId: Number,
+    player2Id: String,
+    player2Name: String,
+    player3Id: String,
+    player3Name: String,
+    player4Id: String,
+    player4Name: String,
     date: {
         type: Date,
         default: Date.now

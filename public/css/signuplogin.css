@@ -20,7 +20,7 @@
     text-align: center;
 }
 .img-container{
-    background-image: url("/imgs/ff-index-bckimg.jpg");
+    background-image: url("/imgs/zonewarlogo.jpeg");
     height: 100vh;
     backdrop-filter: 0.3;
     background-size: 100% 100%;
@@ -36,7 +36,7 @@
     width: fit-content;
     padding: 20px;
     background: transparent;
-    backdrop-filter: blur(20px);
+    backdrop-filter: blur(100px);
     margin: 5px;
     border-radius: 5px;
     box-shadow: 1px 1px 10px #fff;
@@ -62,7 +62,10 @@
     flex-direction: row;
     gap: 10px;
     padding-left: 5px;
+    color: #fff;
+    font-size: 15px;
 }
+
 .form-container .checkbox-agreement-container{
     display: flex;
     flex-direction: row;
@@ -72,7 +75,7 @@
     color: black;
 }
 .form-container .checkbox-agreement-container a{
-    color: black;
+    color: rgb(255, 255, 255);
     font-size: 15px;
 }
 .form-container input[type="submit"]{
@@ -85,13 +88,16 @@
     border-radius: 5px;
     font-size: 18px;
 }
+.form-container input[type="submit"]:hover{
+    background-color: rgb(63, 63, 228);
+}
 a{
-    color: white;
+    color: blue;
     padding-left: 5px;
-    font-size: 20px;
+    font-size: 22px;
     text-decoration: none;
 }
 h2{
     padding-left: 5px;
-    color: #fff;
+    color: blue;
 }

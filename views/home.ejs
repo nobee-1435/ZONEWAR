@@ -19,15 +19,16 @@
         
      
       <div class="sub-main-container">
+   
+            
+            <p class="match-trmnt">MATCHS & TOURNMENTS</p>
             <% if(matchAppliedorcanceled) { %>
                 <div class="homenotification">
                     <div class="matchApplied-succes-notification-bar" id="matchApplied-succes-notification-bar">
                         <p id="matchAppliedorcanceledValue"><%= matchAppliedorcanceled %></p>
                    </div>
                 </div>
-            <% } %>   
-            
-            <p class="match-trmnt">MATCHS & TOURNMENTS</p>
+            <% } %>  
             <% mainMatchContainer.forEach(mainMatchContainer => { %>
                 <% mainMatchContainer.matchFullDetails.forEach(match => { %>
                     <div class="match-details-container">
@@ -63,7 +64,7 @@
                             <p>Entry Amount</p> 
                         </div>
                         <div class="prizeamt-entryamt">
-                            <p style="color: rgb(5, 92, 5);"><%= match.firstPrice %></p>
+                            <p  class="head-1st-prize"><%= match.firstPrice %></p>
                             <form class="prize-form-container" id="paymentpage-submit-btn" action="/paymentBtn" method="post">
                                 <input type="hidden" name="matchType" value="<%= match.matchType %>" readonly>
                                 <input type="hidden" name="matchStartingTime" value="<%= match.matchStartingTime %>">
@@ -74,12 +75,22 @@
             
                         <div class="participants-counts">
                             <div>
-                                <p>Total Participants</p>
+                                <p>Total Players</p>
                             </div>
-                            <div>
-                                <span id="registered-payer"><%= match.appliedPlayerList.length %></span> /
-                                <span id="posible-player"><%= match.totalParticipantPlayerNumber %></span>
-                            </div>
+                            <% if (match.matchType === 'SOLO MATCH') { %>
+                                <div>
+                                    <span id="registered-payer"><%= match.appliedPlayerList.length %></span> /
+                                    <span id="posible-player"><%= match.totalParticipantPlayerNumber %></span>
+                                </div>
+                            <% } %>
+
+                            <% if (match.matchType === 'SQUAD MATCH') { %>
+                                <div>
+                                    <span id="registered-payer"><%= match.appliedPlayerList.length*4 %></span> /
+                                    <span id="posible-player"><%= match.totalParticipantPlayerNumber %></span>
+                                </div>
+                            <% } %>
+                  
                         </div>
             
                         <div class="Player-details-container">
@@ -94,7 +105,7 @@
                         </div>
             
                         <div class="footer-container">
-                            <p>1st prize <%= match.firstPrice %></p>
+                            <p class="footer-1st-prize">1st prize <%= match.firstPrice %></p>
                             <div class="guaranteed-container">
                                 <% if (match.showRoomDetails) { %>
                                 <p class="isTeam">You Are In Team</p>
@@ -107,7 +118,7 @@
                     </div>
                 <% }) %>
             <% }) %>
-            <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9253690,document.createElement('script'))</script>
+            <!-- <script>(function(d,z,s){s.src='https://'+d+'/400/'+z;try{(document.body||document.documentElement).appendChild(s)}catch(e){}})('vemtoutcheeg.com',9253690,document.createElement('script'))</script> -->
 
    
         </div>
@@ -118,6 +129,6 @@
 
     <script src="/js/home.js"></script>
 
-    <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',9250110,document.body||document.documentElement)</script>
+    <!-- <script>(function(s,u,z,p){s.src=u,s.setAttribute('data-zone',z),p.appendChild(s);})(document.createElement('script'),'https://shebudriftaiter.net/tag.min.js',9250110,document.body||document.documentElement)</script> -->
 </body>
 </html>

@@ -8,7 +8,8 @@
     <link rel="stylesheet" href="/css/payment.css">
 </head>
 <body>
-    <script src="https://ligheechoagool.com/88/tag.min.js" data-zone="144100" async data-cfasync="false"></script>
+    <!-- ads -->
+    <!-- <script src="https://ligheechoagool.com/88/tag.min.js" data-zone="144100" async data-cfasync="false"></script> -->
     <div class="main-container">
         <h3>Payment Process</h3>
         <input type="text" class="selectPaymentOption-error" id="selectPaymentOption-error" value="Select The Payment Method"  readonly>
@@ -43,6 +44,33 @@
             <label for="">Transaction  Id</label>
             <input type="text" name="TransactionId" maxlength="12" minlength="12" inputmode="numeric" required>
 
+            <% } %>
+
+            <% if (matchFullDetails.matchType === "SQUAD MATCH") { %>
+                <h4>ADD YOUR SQUAD</h4>
+                <div class="squad-container">
+                    <div class="squad-sub-container">
+                        <input type="text" value="TEAM LEADER(You)" readonly>
+                        <input type="text" value="<%= player.FFID %>" readonly>
+                        <input type="text" value="<%= player.FFNAME %>" readonly>
+                    </div>
+                    <div class="squad-sub-container">
+                        <input type="text" value="PLAYER 2" readonly>
+                        <input type="text" name="player2Id" placeholder="PLAYER 2 FFID" minlength="8" maxlength="10" inputmode="numeric" required>
+                        <input type="text" name="player2Name" placeholder="PLAYER2 FFNAME"  required>
+                    </div>
+                    <div class="squad-sub-container">
+                        <input type="text" value="PLAYER 3" readonly>
+                        <input type="text"  name="player3Id" placeholder="PLAYER 3 FFID" minlength="8" maxlength="10" inputmode="numeric" required>
+                        <input type="text" name="player3Name" placeholder="PLAYER3 FFNAME" required>
+                    </div>
+                    <div class="squad-sub-container">
+                        <input type="text" value="PLAYER 4" readonly>
+                        <input type="text"  name="player4Id" placeholder="PLAYER 4 FFID" minlength="8" maxlength="10" inputmode="numeric" required>
+                        <input type="text" name="player4Name" placeholder="PLAYER4 FFNAME" required>
+                    </div>
+                </div>
+        
             <% } %>
 
 

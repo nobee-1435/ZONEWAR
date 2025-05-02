@@ -13,11 +13,33 @@
         <div class="submain-container">
             <% matchFullDetails.forEach(selectedPlayerList => {%>
                 <p class="count-box"></p>
-                <div class="playernameandid-container">
-                    <input type="text" name="playerName" value="<%= selectedPlayerList.playerName %>" readonly>
-                    <input type="text" name="playerId" value="<%= selectedPlayerList.playerId %>" readonly>
-                 
-                </div>
+
+                <% if (selectedPlayerList.matchType === 'SOLO MATCH') { %>
+                    <div class="playernameandid-container">
+                        <input class="matchType" type="hidden" value="<%= selectedPlayerList.matchType %>">
+                        <input type="text" name="playerName" value="<%= selectedPlayerList.playerName %>" readonly>
+                        <input type="text" name="playerId" value="<%= selectedPlayerList.playerId %>" readonly>
+                    </div>
+                <% } %>
+
+                <% if (selectedPlayerList.matchType === 'SQUAD MATCH') { %>
+                    <div class="playernameandid-container">
+                        <input class="matchType" type="hidden" value="<%= selectedPlayerList.matchType %>">
+                        <input type="text" name="playerName" value="<%= selectedPlayerList.playerName %>" readonly>
+                        <input type="text" name="playerId" value="<%= selectedPlayerList.playerId %>" readonly>
+                        <hr>
+                        <input type="text" name="playerName" value="<%= selectedPlayerList.player2Name %>" readonly>
+                        <input type="text" name="playerId" value="<%= selectedPlayerList.player2Id %>" readonly>
+                        <hr>
+                        <input type="text" name="playerName" value="<%= selectedPlayerList.player3Name %>" readonly>
+                        <input type="text" name="playerId" value="<%= selectedPlayerList.player3Id %>" readonly>
+                        <hr>
+                        <input type="text" name="playerName" value="<%= selectedPlayerList.player4Name %>" readonly>
+                        <input type="text" name="playerId" value="<%= selectedPlayerList.player4Id %>" readonly>
+                    </div>
+                <% } %>
+                
+
             <%}) %>
         </div>
     </div> 

@@ -40,8 +40,7 @@ app.use(
   session({
     secret: process.env.JWT_SECRET,
     resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({ mongoUrl: process.env.MONGODB_URI }),
+    saveUninitialized: true,
   })
 );
 
@@ -223,15 +222,15 @@ app.get("/home", isLoggedIn, async function (req, res) {
 
   const player = await playerModel.findOne({ FFID: req.player.FFID });
   if(! player){
-    res.redirect('/signup');
+   return res.redirect('/signup');
   }
   else{
     let playerFFID = player.FFID;
 
     const filteredMatches = mainMatchContainer.map((container) => {
       container.matchFullDetails = container.matchFullDetails.map((match) => {
-        match.showRoomDetails = match.selectedPlayerList.some(
-          (player) => player.playerId === String(playerFFID)
+        match.showRoomDetails = match.selectedPlayerList.some((player) =>
+          [player.playerId, player.player2Id, player.player3Id, player.player4Id].includes(String(playerFFID))
         );
         return match;
       });
@@ -400,7 +399,6 @@ app.get('/payment/:playerId/:matchType/:MDmatchId/:entryAmount/:matchStartingTim
     entryAmount,
     player,
     matchFullDetails
-
   });
 });
 
@@ -408,6 +406,7 @@ app.get('/payment/:playerId/:matchType/:MDmatchId/:entryAmount/:matchStartingTim
 
 
 app.post("/paymentsend", isLoggedIn, async function (req, res) {
+  
   let {
     MDmatchId,
     playerName,
@@ -417,6 +416,12 @@ app.post("/paymentsend", isLoggedIn, async function (req, res) {
     paymentMethod,
     matchStartingTime,
     TransactionId,
+    player2Id,
+    player2Name,
+    player3Id,
+    player3Name,
+    player4Id,
+    player4Name,
   } = req.body;
 
   const matchFullDetails = await matchFullDetailsModel
@@ -428,46 +433,175 @@ app.post("/paymentsend", isLoggedIn, async function (req, res) {
         (player) => player.playerId
       );
       if (playerIds.includes(playerId)) {
-        req.session.matchAppliedorcanceled = `${playerId} This PlayerId Was Already Applied This Match`;
+        req.session.matchAppliedorcanceled = `${playerId}(you) This PlayerId Was Already Applied This Match`;
         return res.redirect("home");
       }
       if(entryAmount === '₹FREE'){
+        if(matchType === 'SOLO MATCH'){
+          let appliedPlayerList = await appliedPlayerListModel.create({
+            MDmatchId,
+            playerName,
+            playerId,
+            matchType,
+            entryAmount,
+            matchStartingTime,
+            selectbtn: "Selected",
+            rejectbtn: "Reject",
+          })
+          const matchFullDetails = await matchFullDetailsModel.findById({
+            _id: MDmatchId,
+          });
+          await appliedPlayerList.save();
+          matchFullDetails.appliedPlayerList.push(appliedPlayerList._id);
+          await matchFullDetails.save();
+                
+   
+        
+          let selectedPlayerList = await selectedPlayerListModel.create({
+            MDmatchId,
+            playerName,
+            playerId,
+            matchType,
+            matchStartingTime,
+            entryAmount,
+          });
+      
+        
+          await selectedPlayerList.save();
+          matchFullDetails.selectedPlayerList.push(selectedPlayerList._id);
+          await matchFullDetails.save();
+          req.session.matchAppliedorcanceled =
+          "You Are Joined The Match🎉";
+          return res.redirect("home");
+        }
+        if(matchType === 'SQUAD MATCH'){
+          
+          const player2 = await playerModel.findOne({ FFID: player2Id });
+          const player3 = await playerModel.findOne({ FFID: player3Id });
+          const player4 = await playerModel.findOne({ FFID: player4Id });
+          const player1inSelected = await selectedPlayerListModel.findOne({
+            $or: [
+                { playerId: playerId},
+                { player2Id: playerId },
+                { player3Id: playerId },
+                { player4Id: playerId }
+            ]
+        });
+          const player2inSelected = await selectedPlayerListModel.findOne({
+            $or: [
+                { playerId: player2Id},
+                { player2Id: player2Id },
+                { player3Id: player2Id },
+                { player4Id: player2Id }
+            ]
+        });
+          
+        const player3inSelected = await selectedPlayerListModel.findOne({
+          $or: [
+              { playerId: player3Id},
+              { player2Id: player3Id },
+              { player3Id: player3Id },
+              { player4Id: player3Id }
+          ]
+      });
+      const player4inSelected = await selectedPlayerListModel.findOne({
+        $or: [
+            { playerId: player4Id},
+            { player2Id: player4Id },
+            { player3Id: player4Id },
+            { player4Id: player4Id }
+        ]
+    });
 
-        let appliedPlayerList = await appliedPlayerListModel.create({
-          MDmatchId,
-          playerName,
-          playerId,
-          matchType,
-          entryAmount,
-          matchStartingTime,
-          selectbtn: "Selected",
-          rejectbtn: "Reject",
-        })
-        const matchFullDetails = await matchFullDetailsModel.findById({
-          _id: MDmatchId,
-        });
-        await appliedPlayerList.save();
-        matchFullDetails.appliedPlayerList.push(appliedPlayerList._id);
-        await matchFullDetails.save();
-              
- 
-      
-        let selectedPlayerList = await selectedPlayerListModel.create({
-          MDmatchId,
-          playerName,
-          playerId,
-          matchType,
-          matchStartingTime,
-          entryAmount,
-        });
-    
-      
-        await selectedPlayerList.save();
-        matchFullDetails.selectedPlayerList.push(selectedPlayerList._id);
-        await matchFullDetails.save();
-        req.session.matchAppliedorcanceled =
-        "You Are Joined The Match🎉";
-        return res.redirect("home");
+          if(!player2){
+            req.session.matchAppliedorcanceled =
+            `${player2Name} does not have an account on Zonewar.`;
+
+           return res.redirect('/home');
+          }
+          if(!player3){
+            req.session.matchAppliedorcanceled =
+            `${player3Name} does not have an account on Zonewar.`;
+
+           return res.redirect('/home');
+          }
+          if(!player4){
+            req.session.matchAppliedorcanceled =
+            `${player4Name} does not have an account on Zonewar.`;
+           return res.redirect('/home');
+          }
+          if(player1inSelected){
+            req.session.matchAppliedorcanceled = `${playerName} already joined in the squad.`;
+            
+            return res.redirect('/home');
+          }
+          if(player2inSelected){
+            req.session.matchAppliedorcanceled = `${player2Name} already joined in the squad.`;
+            
+            return res.redirect('/home');
+          }
+          if(player3inSelected){
+            req.session.matchAppliedorcanceled = `${player3Name} already joined in the squad.`;
+            
+            return res.redirect('/home');
+          }
+          if(player4inSelected){
+            req.session.matchAppliedorcanceled = `${player4Name} already joined in the squad`;
+            return res.redirect('/home');
+          }else{
+            let appliedPlayerList = await appliedPlayerListModel.create({
+              MDmatchId,
+              playerName,
+              playerId,
+              matchType,
+              entryAmount,
+              matchStartingTime,
+              player2Id,
+              player2Name,
+              player3Id,
+              player3Name,
+              player4Id,
+              player4Name,
+              selectbtn: "Selected",
+              rejectbtn: "Reject",
+            })
+            const matchFullDetails = await matchFullDetailsModel.findById({
+              _id: MDmatchId,
+            });
+            await appliedPlayerList.save();
+            matchFullDetails.appliedPlayerList.push(appliedPlayerList._id);
+            await matchFullDetails.save();
+                  
+     
+          
+            let selectedPlayerList = await selectedPlayerListModel.create({
+              MDmatchId,
+              playerName,
+              playerId,
+              matchType,
+              matchStartingTime,
+              entryAmount,
+              player2Id,
+              player2Name,
+              player3Id,
+              player3Name,
+              player4Id,
+              player4Name,
+            });
+        
+          
+            await selectedPlayerList.save();
+            matchFullDetails.selectedPlayerList.push(selectedPlayerList._id);
+            await matchFullDetails.save();
+            req.session.matchAppliedorcanceled =
+            "You Are Joined The Match🎉";
+            return res.redirect("home");
+  
+          }
+          }
+          
+
+
       }else {
         let appliedPlayerList = await appliedPlayerListModel.create({
           MDmatchId,
@@ -574,7 +708,7 @@ function isLoggedIn(req, res, next) {
 
   // Check if token is missing or empty
   if (!token || token.length === 0) {
-    return res.redirect("/login");
+    return res.redirect("/signup");
   }
 
   try {
