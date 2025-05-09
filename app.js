@@ -269,7 +269,7 @@ app.post("/signup", async function (req, res) {
       FormData: req.body,
     });
   }
-  if (FFID.length < 10) {
+  if (FFID.length < 8) {
     return res.render("signup", {
       mobileError: "Invalid FF Id",
       FormData: req.body,
