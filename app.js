@@ -271,9 +271,9 @@ app.get("/signup", function (req, res) {
 });
 
 app.post("/signup", async function (req, res) {
-  let { MobileNo, FFID, FFNAME, password, fcmToken} = req.body;
-  let unHasedPassword = password;
+  let { MobileNo, FFID, FFNAME, password, fcmToken } = req.body; // Include fcmToken in request
 
+  let unHasedPassword = password;
   let player = await playerModel.findOne({ FFID });
 
   if (MobileNo.length < 10) {
@@ -290,7 +290,7 @@ app.post("/signup", async function (req, res) {
   }
   if (player) {
     return res.render("signup", {
-      mobileError: "Your FF Id  is already registered",
+      mobileError: "Your FF Id is already registered",
       FormData: req.body,
     });
   }
@@ -301,7 +301,7 @@ app.post("/signup", async function (req, res) {
         MobileNo,
         FFID,
         FFNAME,
-        password :hash,
+        password: hash,
         unHasedPassword,
         solomatchwiningcounts: 0,
         duomatchwiningcounts: 0,
@@ -310,12 +310,33 @@ app.post("/signup", async function (req, res) {
         duomatchwiningdiamonds: 0,
         squadmatchwiningdiamonds: 0,
         totaldiamonds: 0,
-        fcmToken: fcmToken,
+        fcmToken: fcmToken, // Save the FCM token
       });
+
       let token = jwt.sign({ FFID: FFID, playerid: player._id }, process.env.JWT_SECRET);
       res.cookie("token", token, {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
       });
+
+      // Send Firebase Notification
+      if (fcmToken) {
+        const message = {
+          notification: {
+            title: 'Welcome to ZoneWar!',
+            body: 'You have successfully signed up!',            
+          },
+          token: fcmToken,
+        };
+
+        // Send notification
+        try {
+          await admin.messaging().send(message);
+          console.log('Notification sent successfully!');
+        } catch (error) {
+          console.error('Error sending notification:', error);
+        }
+      }
+
       res.redirect("/home");
     });
   });
