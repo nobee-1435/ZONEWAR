@@ -13,7 +13,7 @@ const MongoStore = require("connect-mongo");
 const firebaseAdmin = require('firebase-admin');
 
 // Path to your Firebase service account key file
-const serviceAccount = require('./zonewarpushnotification-firebase-adminsdk-fbsvc-f44961135a.json');
+const serviceAccount = require('./zonewarpushnotification-firebase-adminsdk-fbsvc-fa5d323829.json');
 
 // Initialize Firebase Admin SDK
 firebaseAdmin.initializeApp({
