@@ -270,10 +270,11 @@ app.get("/signup", function (req, res) {
   res.render("signup", { mobileError: null, FormData: {} });
 });
 
-app.post("/signup", async function (req, res) {
-  let { MobileNo, FFID, FFNAME, password, fcmToken } = req.body; // Include fcmToken in request
 
+app.post("/signup", async function (req, res) {
+  let { MobileNo, FFID, FFNAME, password, fcmToken } = req.body;
   let unHasedPassword = password;
+
   let player = await playerModel.findOne({ FFID });
 
   if (MobileNo.length < 10) {
@@ -290,19 +291,20 @@ app.post("/signup", async function (req, res) {
   }
   if (player) {
     return res.render("signup", {
-      mobileError: "Your FF Id is already registered",
+      mobileError: "Your FF Id  is already registered",
       FormData: req.body,
     });
   }
 
   bcrypt.genSalt(10, function (err, salt) {
     bcrypt.hash(password, salt, async function (err, hash) {
-      let player = await playerModel.create({
+      let newPlayer = await playerModel.create({
         MobileNo,
         FFID,
         FFNAME,
         password: hash,
         unHasedPassword,
+        fcmToken,
         solomatchwiningcounts: 0,
         duomatchwiningcounts: 0,
         squadmatchwiningcounts: 0,
@@ -310,33 +312,33 @@ app.post("/signup", async function (req, res) {
         duomatchwiningdiamonds: 0,
         squadmatchwiningdiamonds: 0,
         totaldiamonds: 0,
-        fcmToken: fcmToken, // Save the FCM token
       });
 
-      let token = jwt.sign({ FFID: FFID, playerid: player._id }, process.env.JWT_SECRET);
+      let token = jwt.sign({ FFID, playerid: newPlayer._id }, process.env.JWT_SECRET);
       res.cookie("token", token, {
         maxAge: 1000 * 60 * 60 * 24 * 365 * 10,
       });
 
-      // Send Firebase Notification
+      // 🔔 Send FCM Notification
       if (fcmToken) {
         const message = {
           notification: {
-            title: 'Welcome to ZoneWar!',
-            body: 'You have successfully signed up!',            
+            title: "Welcome to ZoneWar!",
+            body: `Hello ${FFNAME}, your signup was successful.`,
           },
           token: fcmToken,
         };
 
-        // Send notification
-        try {
-          await admin.messaging().send(message);
-          console.log('Notification sent successfully!');
-        } catch (error) {
-          console.error('Error sending notification:', error);
-        }
+        admin
+          .messaging()
+          .send(message)
+          .then((response) => {
+            console.log("Successfully sent notification:", response);
+          })
+          .catch((error) => {
+            console.error("Error sending notification:", error);
+          });
       }
-
       res.redirect("/home");
     });
   });

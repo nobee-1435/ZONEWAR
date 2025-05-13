@@ -7,6 +7,8 @@
 
     <title>zonewar signup</title>
     <link rel="stylesheet" href="/css/signuplogin.css">
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js"></script>
 </head>
 <body>
     <div class="img-container">
@@ -22,6 +24,7 @@
                 <input type="text" name="FFID" placeholder="Your FF Id" minlength="10" maxlength="10" inputmode="numeric" pattern="[0-9]*" oninput="this.value=this.value.slice(0,10)" required>
                 <input type="text" name="FFNAME" placeholder="Your FF Name" required>
                 <input type="password" minlength="6" maxlength="20" placeholder="password" name="password" id="password" required>
+                <input type="hidden" id="fcmToken" name="fcmToken">
                 <div class="ckeckbox-password-container">
                     <input type="checkbox" id="togglepassword">Check Password
                 </div>
@@ -38,51 +41,31 @@
     </div>
 
 
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js"></script>
+ 
     <script src="/js/signuplogin.js">
-
-        // Initialize Firebase
   const firebaseConfig = {
     apiKey: "AIzaSyCofmkkCvSb5TR3gDe3uSVYSoXbBYgvyqg",
-    authDomain: "zonewarpushnotification.firebaseapp.com",
-    projectId: "zonewarpushnotification",
-    storageBucket: "zonewarpushnotification.firebasestorage.app",
-    messagingSenderId: "1009522500725",
-    appId: "1:1009522500725:web:dc5c4a75d89d1d43edc43c",
-    measurementId: "G-1C0HPTZ588"
+  authDomain: "zonewarpushnotification.firebaseapp.com",
+  projectId: "zonewarpushnotification",
+  storageBucket: "zonewarpushnotification.firebasestorage.app",
+  messagingSenderId: "1009522500725",
+  appId: "1:1009522500725:web:dc5c4a75d89d1d43edc43c",
+  measurementId: "G-1C0HPTZ588"
   };
 
   firebase.initializeApp(firebaseConfig);
-
   const messaging = firebase.messaging();
 
-  messaging.requestPermission()
-    .then(() => {
-      return messaging.getToken();
-    })
+  messaging
+    .requestPermission()
+    .then(() => messaging.getToken({ vapidKey: "BAVWfhVCLXoZX4fiEDKc8DsWEa0vYDFog6esJcUnSzlFpuwPw2AOKCfsIWgGgjUTNGJVY0j4Zh5spMUwiEQz06k" }))
     .then((token) => {
-      // Send token to your backend along with other form data
-      document.querySelector("form").addEventListener("submit", function(e) {
-        e.preventDefault();
-
-        // Add fcmToken to form data
-        const formData = new FormData(this);
-        formData.append("fcmToken", token);
-
-        fetch('/signup', {
-          method: 'POST',
-          body: formData
-        })
-        .then(response => response.json())
-        .then(data => {
-          // Handle success or failure
-        });
-      });
+      document.getElementById("fcmToken").value = token;
     })
     .catch((err) => {
-      console.error('Error getting FCM token:', err);
+      console.warn("FCM token error:", err);
     });
+
     </script>
 </body>
 </html>
