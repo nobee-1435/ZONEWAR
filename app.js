@@ -10,8 +10,21 @@ const crypto = require("crypto");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 
+const firebaseAdmin = require('firebase-admin');
+
+// Path to your Firebase service account key file
+const serviceAccount = require('./zonewarpushnotification-firebase-adminsdk-fbsvc-f44961135a.json');
+
+// Initialize Firebase Admin SDK
+firebaseAdmin.initializeApp({
+  credential: firebaseAdmin.credential.cert(serviceAccount)
+});
+
+
 const { SitemapStream, streamToPromise } = require('sitemap');
 const { Readable } = require('stream');
+
+
 
 
 const playerModel = require("./models/player");
@@ -258,7 +271,7 @@ app.get("/signup", function (req, res) {
 });
 
 app.post("/signup", async function (req, res) {
-  let { MobileNo, FFID, FFNAME, password } = req.body;
+  let { MobileNo, FFID, FFNAME, password, fcmToken} = req.body;
   let unHasedPassword = password;
 
   let player = await playerModel.findOne({ FFID });
@@ -297,7 +310,7 @@ app.post("/signup", async function (req, res) {
         duomatchwiningdiamonds: 0,
         squadmatchwiningdiamonds: 0,
         totaldiamonds: 0,
-
+        fcmToken: fcmToken,
       });
       let token = jwt.sign({ FFID: FFID, playerid: player._id }, process.env.JWT_SECRET);
       res.cookie("token", token, {
@@ -701,6 +714,55 @@ app.post('/redeem', isLoggedIn , async function(req,res){
   }
   
 })
+
+app.get("/notifi", (req, res) => {
+  res.render("notifi"); // renders views/index.ejs
+});
+
+// Save FCM token from client
+app.post("/save-token", async (req, res) => {
+  const { playerId, token } = req.body;
+  try {
+    await playerModel.findByIdAndUpdate(playerId, { fcmToken: token });
+    res.json({ message: "Token saved successfully" });
+  } catch (err) {
+    res.status(500).json({ error: "Failed to save token" });
+  }
+});
+
+// Send Notification
+app.post("/send-to-selected", async (req, res) => {
+  try {
+    const playerIds = [
+      "6823093e91a79b38e82de913"
+    ];
+
+    const players = await playerModel.find({ _id: { $in: playerIds } });
+    const tokens = players.map(p => p.fcmToken).filter(Boolean);
+
+    if (tokens.length === 0) return res.status(400).json({ error: "No valid tokens found." });
+
+    const message = {
+      notification: {
+        title: "Match Alert",
+        body: "Get ready for your match!"
+      },
+      tokens
+    };
+
+    const response = await admin.messaging().sendMulticast(message);
+    res.status(200).json({
+      message: "Notifications sent.",
+      successCount: response.successCount,
+      failureCount: response.failureCount
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Notification sending failed." });
+  }
+});
+
 
 function isLoggedIn(req, res, next) {
 

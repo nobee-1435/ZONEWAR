@@ -38,7 +38,51 @@
     </div>
 
 
-    <script src="/js/signuplogin.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging.js"></script>
+    <script src="/js/signuplogin.js">
 
+        // Initialize Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCofmkkCvSb5TR3gDe3uSVYSoXbBYgvyqg",
+    authDomain: "zonewarpushnotification.firebaseapp.com",
+    projectId: "zonewarpushnotification",
+    storageBucket: "zonewarpushnotification.firebasestorage.app",
+    messagingSenderId: "1009522500725",
+    appId: "1:1009522500725:web:dc5c4a75d89d1d43edc43c",
+    measurementId: "G-1C0HPTZ588"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+
+  const messaging = firebase.messaging();
+
+  messaging.requestPermission()
+    .then(() => {
+      return messaging.getToken();
+    })
+    .then((token) => {
+      // Send token to your backend along with other form data
+      document.querySelector("form").addEventListener("submit", function(e) {
+        e.preventDefault();
+
+        // Add fcmToken to form data
+        const formData = new FormData(this);
+        formData.append("fcmToken", token);
+
+        fetch('/signup', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Handle success or failure
+        });
+      });
+    })
+    .catch((err) => {
+      console.error('Error getting FCM token:', err);
+    });
+    </script>
 </body>
 </html>

@@ -18,6 +18,7 @@ const playerSchema = mongoose.Schema({
     duomatchwiningdiamonds: Number,
     squadmatchwiningdiamonds: Number,
     totaldiamonds: Number,
+    fcmToken: { type: String, required: false },
     date: {
         type: Date,
         default: Date.now
